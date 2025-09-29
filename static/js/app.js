@@ -18,6 +18,19 @@ class ChatApp {
         // 动画定时器
         this.recognitionAnimationTimer = null;
         this.thinkingAnimationTimer = null; // 新增思考动画定时器
+        // 检测内置浏览器环境
+        this.isInAppBrowser = this.detectInAppBrowser();
+    }
+
+    // 检测是否在微信、飞书、钉钉等内置浏览器中
+    detectInAppBrowser() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        return userAgent.includes('micromessenger') || // 微信
+               userAgent.includes('lark') ||           // 飞书
+               userAgent.includes('dingtalk') ||       // 钉钉
+               userAgent.includes('aliapp') ||         // 支付宝
+               userAgent.includes('qq/') ||            // QQ
+               userAgent.includes('weibo');            // 微博
     }
 
     initElements() {
@@ -899,20 +912,107 @@ class ChatApp {
             if (response.ok) {
                 const audioBlob = await response.blob();
                 const audioUrl = URL.createObjectURL(audioBlob);
-                this.addAudioButton(messageElement, audioUrl);
                 
-                // 自动播放语音
-                const audioBtn = messageElement.querySelector('.audio-btn');
-                if (audioBtn) {
-                    // 延迟一小段时间确保按钮已添加
-                    setTimeout(() => {
-                        this.playAudio(audioUrl, audioBtn);
-                    }, 100);
+                // 根据浏览器环境选择不同的UI
+                if (this.isInAppBrowser) {
+                    this.addWeChatStyleVoiceMessage(messageElement, audioUrl, text);
+                } else {
+                    this.addAudioButton(messageElement, audioUrl);
+                    
+                    // 自动播放语音
+                    const audioBtn = messageElement.querySelector('.audio-btn');
+                    if (audioBtn) {
+                        // 延迟一小段时间确保按钮已添加
+                        setTimeout(() => {
+                            this.playAudio(audioUrl, audioBtn);
+                        }, 100);
+                    }
                 }
             }
         } catch (error) {
             console.error('语音合成失败:', error);
         }
+    }
+
+    // 添加微信风格的语音消息
+    addWeChatStyleVoiceMessage(messageElement, audioUrl, text) {
+        const messageContent = messageElement.querySelector('.message-content');
+        const messageText = messageElement.querySelector('.message-text');
+        
+        // 创建语音消息容器
+        const voiceContainer = document.createElement('div');
+        voiceContainer.className = 'wechat-voice-message';
+        
+        // 创建语音播放区域
+        const voicePlayArea = document.createElement('div');
+        voicePlayArea.className = 'voice-play-area';
+        
+        // 语音图标
+        const voiceIcon = document.createElement('div');
+        voiceIcon.className = 'voice-icon';
+        voiceIcon.innerHTML = '🔊';
+        
+        // 语音时长（估算）
+        const duration = Math.ceil(text.length / 10); // 简单估算，每10个字符1秒
+        const durationText = document.createElement('span');
+        durationText.className = 'voice-duration';
+        durationText.textContent = `${duration}"`;
+        
+        voicePlayArea.appendChild(voiceIcon);
+        voicePlayArea.appendChild(durationText);
+        
+        // 文字内容
+        const textContent = document.createElement('div');
+        textContent.className = 'voice-text-content';
+        textContent.textContent = text;
+        
+        voiceContainer.appendChild(voicePlayArea);
+        voiceContainer.appendChild(textContent);
+        
+        // 添加点击播放事件
+        voicePlayArea.addEventListener('click', () => {
+            this.playWeChatVoice(audioUrl, voiceIcon);
+        });
+        
+        // 替换原有内容
+        messageContent.innerHTML = '';
+        messageContent.appendChild(voiceContainer);
+    }
+
+    // 播放微信风格语音
+    playWeChatVoice(audioUrl, iconElement) {
+        // 停止当前播放的音频
+        if (this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio = null;
+            // 重置所有语音图标
+            document.querySelectorAll('.voice-icon').forEach(icon => {
+                icon.innerHTML = '🔊';
+                icon.classList.remove('playing');
+            });
+        }
+
+        const audio = new Audio(audioUrl);
+        this.currentAudio = audio;
+        
+        // 更新图标为播放状态
+        iconElement.innerHTML = '🔉';
+        iconElement.classList.add('playing');
+        
+        audio.play();
+        
+        audio.onended = () => {
+            iconElement.innerHTML = '🔊';
+            iconElement.classList.remove('playing');
+            this.currentAudio = null;
+        };
+        
+        audio.onerror = () => {
+            iconElement.innerHTML = '🔊';
+            iconElement.classList.remove('playing');
+            this.currentAudio = null;
+            this.showError('音频播放失败');
+        };
     }
 
     addAudioButton(messageElement, audioUrl) {

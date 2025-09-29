@@ -869,3 +869,143 @@ body {
         min-width: 100px;
     }
 }
+
+/* 微信风格语音消息样式 */
+.wechat-voice-message {
+    max-width: 100%;
+    margin: 0.5rem 0;
+}
+
+.voice-play-area {
+    background: #95ec69;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 8px;
+    min-width: 120px;
+    max-width: 280px;
+}
+
+.voice-play-area:hover {
+    background: #8de354;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.voice-play-area:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.voice-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.voice-icon.playing {
+    animation: voicePlaying 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes voicePlaying {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.voice-duration {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    min-width: 20px;
+}
+
+.voice-text-content {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    border-left: 3px solid #95ec69;
+    margin-left: 8px;
+    position: relative;
+}
+
+.voice-text-content::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 12px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid #f5f5f5;
+}
+
+/* 用户消息中的语音样式调整 */
+.message.user .voice-play-area {
+    background: #007aff;
+    color: white;
+}
+
+.message.user .voice-play-area:hover {
+    background: #0056cc;
+}
+
+.message.user .voice-icon,
+.message.user .voice-duration {
+    color: white;
+}
+
+.message.user .voice-text-content {
+    background: #e3f2fd;
+    border-left-color: #007aff;
+}
+
+.message.user .voice-text-content::before {
+    border-right-color: #e3f2fd;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .voice-play-area {
+        padding: 10px 14px;
+        gap: 10px;
+        min-width: 100px;
+        max-width: 240px;
+    }
+    
+    .voice-text-content {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
+    .voice-play-area {
+        padding: 10px 14px;
+        gap: 10px;
+        min-width: 100px;
+        max-width: 240px;
+    }
+    
+    .voice-text-content {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
