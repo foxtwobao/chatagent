@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问道耀忠 - 智能对话助手</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部区域 -->
+        <header class="header">
+            <div class="header-content">
+                <div class="menu-icon">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h1 class="title">问道耀忠</h1>
+                <div class="header-actions">
+                    <button class="action-btn" id="settingsBtn">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                    <button class="action-btn" id="recordBtn">
+                        <i class="fas fa-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 头像和引言区域 -->
+            <div class="avatar-section">
+                <div class="avatar-container">
+                    <img src="resources/yaozhong.jpg" alt="陈耀忠" class="avatar">
+                </div>
+                <div class="quote-section">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <div class="quote-content">
+                        <p class="quote-text" id="quoteText">
+                            “成为一个有爱心的人，把爱带给他人”作为我今后一生要做的功课：放下身份，以人为镜，在“学”与“习”中坚持修炼自己
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 对话历史区域 -->
+            <div class="chat-history" id="chatHistory">
+                <!-- 对话消息将在这里动态添加 -->
+            </div>
+        </main>
+
+        <!-- 底部输入区域 -->
+        <footer class="input-section">
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <input type="text" 
+                           id="messageInput" 
+                           class="message-input" 
+                           placeholder="发消息..."
+                           maxlength="500">
+                    <button class="voice-btn" id="voiceBtn" title="语音输入">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+                <button class="send-btn" id="sendBtn" title="发送消息">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="footer-info">
+                <span class="info-text">内容由 AI 生成，仅供参考</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 语音录制状态指示器 -->
+    <div class="voice-indicator" id="voiceIndicator">
+        <div class="voice-wave">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+        </div>
+        <div class="recording-info">
+            <div class="recording-time" id="recordingTime">00:00</div>
+            <div class="recording-status">正在录音中...</div>
+        </div>
+        <button class="stop-recording" id="stopRecording">停止录音</button>
+    </div>
+
+    <script src="static/js/app.js"></script>
+    <!-- <script src="static/js/llm-switcher.js"></script> -->
+</body>
+</html>

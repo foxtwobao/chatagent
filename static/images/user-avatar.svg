@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <linearGradient id="userGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景圆形 -->
+  <circle cx="20" cy="20" r="20" fill="url(#userGradient)"/>
+  
+  <!-- 用户图标 -->
+  <g fill="white">
+    <!-- 头部 -->
+    <circle cx="20" cy="15" r="6"/>
+    <!-- 身体 -->
+    <path d="M8 32 C8 26, 13 22, 20 22 C27 22, 32 26, 32 32 L32 35 C32 36, 31 37, 30 37 L10 37 C9 37, 8 36, 8 35 Z"/>
+  </g>
+</svg>

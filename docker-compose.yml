@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  chatagent:
+    build: .
+    container_name: chatagent-app
+    ports:
+      - "8001:8001"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+      # 火山引擎API配置
+      - VOLCANO_ACCESS_KEY=${VOLCANO_ACCESS_KEY}
+      # 语音合成配置
+      - VOICE_APP_ID=${VOICE_APP_ID}
+      - VOICE_ACCESS_TOKEN=${VOICE_ACCESS_TOKEN}
+      - TTS_SPEECH_RATE=${TTS_SPEECH_RATE:-0}
+      - TTS_VOICE_TYPE=${TTS_VOICE_TYPE:-S_dQcSOODF1}
+      - TTS_RESOURCE_ID=${TTS_RESOURCE_ID:-volc.megatts.default}
+      # ASR语音识别配置
+      - ASR_APP_ID=${ASR_APP_ID}
+      - ASR_ACCESS_TOKEN=${ASR_ACCESS_TOKEN}
+      - ASR_SUBMIT_URL=${ASR_SUBMIT_URL:-https://openspeech.bytedance.com/api/v3/auc/bigmodel/submit}
+      - ASR_QUERY_URL=${ASR_QUERY_URL:-https://openspeech.bytedance.com/api/v3/auc/bigmodel/query}
+      - ASR_RESOURCE_ID=${ASR_RESOURCE_ID:-volc.bigasr.auc}
+      - ASR_MODEL_NAME=${ASR_MODEL_NAME:-bigmodel}
+      - ASR_MODEL_VERSION=${ASR_MODEL_VERSION:-400}
+      - ASR_SAMPLE_RATE=${ASR_SAMPLE_RATE:-16000}
+      - ASR_LANGUAGE=${ASR_LANGUAGE:-}
+      - ASR_MAX_DURATION=${ASR_MAX_DURATION:-60}
+      - ASR_ENABLE_ITN=${ASR_ENABLE_ITN:-true}
+      - ASR_ENABLE_PUNC=${ASR_ENABLE_PUNC:-false}
+      - ASR_ENABLE_DDC=${ASR_ENABLE_DDC:-false}
+      - ASR_PUBLIC_BASE_URL=${ASR_PUBLIC_BASE_URL:-}
+      - ASR_KEEP_UPLOADS=${ASR_KEEP_UPLOADS:-false}
+      # 飞书Aily配置
+      - FEISHU_APP_ID=${FEISHU_APP_ID}
+      - FEISHU_APP_SECRET=${FEISHU_APP_SECRET}
+      - SKILL_APP_ID=${SKILL_APP_ID}
+      - SKILL_ID=${SKILL_ID}
+      - FEISHU_OPEN_API_BASE=${FEISHU_OPEN_API_BASE:-https://open.feishu.cn}
+      - FEISHU_POLLING_INTERVAL=${FEISHU_POLLING_INTERVAL:-0.3}
+      - FEISHU_MAX_POLLING_TIME=${FEISHU_MAX_POLLING_TIME:-60}
+      # 服务器配置
+      - SERVER_HOST=${SERVER_HOST:-0.0.0.0}
+      - SERVER_PORT=${SERVER_PORT:-8001}
+      # DeepSeek模型配置
+      - DEEPSEEK_MODEL=${DEEPSEEK_MODEL:-deepseek-v3-1-terminus}
+      - DEEPSEEK_API_URL=${DEEPSEEK_API_URL:-https://ark.cn-beijing.volces.com/api/v3/chat/completions}
+      # 默认参数配置
+      - DEFAULT_TEMPERATURE=${DEFAULT_TEMPERATURE:-0.7}
+      - DEFAULT_MAX_TOKENS=${DEFAULT_MAX_TOKENS:-2048}
+      # LLM提供商配置
+      - LLM_PROVIDER=${LLM_PROVIDER:-feishu_aily}
+      # 调试模式
+      - DEBUG=${DEBUG:-false}
+    volumes:
+      # 挂载配置文件，方便修改配置
+      - ./config.py:/app/config.py:ro
+      # 挂载资源文件
+      - ./resources:/app/resources:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - chatagent-network
+
+networks:
+  chatagent-network:
+    driver: bridge
+
+# 可选：如果需要持久化数据，可以添加volumes配置
+# volumes:
+#   chatagent-data:
+#     driver: local
