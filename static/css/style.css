@@ -997,15 +997,3 @@ body {
         font-size: 13px;
     }
 }
-    .voice-play-area {
-        padding: 10px 14px;
-        gap: 10px;
-        min-width: 100px;
-        max-width: 240px;
-    }
-    
-    .voice-text-content {
-        padding: 10px 14px;
-        font-size: 13px;
-    }
-}
